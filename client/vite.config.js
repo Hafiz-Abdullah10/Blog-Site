@@ -8,6 +8,12 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  css: {
+    transformer: 'postcss', // ✅ Disable LightningCSS (fix for Vercel)
+  },
+  build: {
+    outDir: 'dist', // ✅ make sure build output is clear
+  },
   server: {
     proxy: {
       '/api': {
@@ -17,4 +23,3 @@ export default defineConfig({
     },
   },
 })
-
