@@ -1,22 +1,40 @@
-import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
+import multer from "multer";
+import ImageKit from "imagekit";
+import fs from "fs";
 
-// Ensure uploads folder exists
-const uploadDir = 'uploads';
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
-}
-
+// Configure local temporary storage for incoming file
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadDir);
+    cb(null, "temp_uploads/"); // temporary folder (will be auto-created)
   },
   filename: (req, file, cb) => {
-    const uniqueName = Date.now() + path.extname(file.originalname);
-    cb(null, uniqueName);
-  }
+    cb(null, Date.now() + "-" + file.originalname);
+  },
 });
 
 const upload = multer({ storage });
+
+// Configure ImageKit
+const imagekit = new ImageKit({
+  publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+  privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+  urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
+});
+
+// Helper function to upload file to ImageKit
+export const uploadToImageKit = async (filePath, fileName) => {
+  const fileBuffer = fs.readFileSync(filePath);
+
+  const result = await imagekit.upload({
+    file: fileBuffer, // upload the buffer
+    fileName,
+    folder: "blog_uploads", // optional folder in ImageKit
+  });
+
+  // Delete the temp file after upload
+  fs.unlinkSync(filePath);
+
+  return result.url;
+};
+
 export default upload;
