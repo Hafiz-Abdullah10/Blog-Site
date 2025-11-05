@@ -2,23 +2,21 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
   ],
   css: {
-    transformer: 'postcss', // ✅ Disable LightningCSS (fix for Vercel)
+    transformer: 'postcss', // ✅ force postcss
   },
   build: {
-    outDir: 'dist', // ✅ ensure build folder is clear and consistent
-    emptyOutDir: true, // ✅ clean dist folder before each build
+    outDir: 'dist',
   },
   server: {
-    proxy: process.env.VERCEL ? {} : { // ✅ disable proxy on Vercel
+    proxy: {
       '/api': {
-        target: 'http://localhost:3000', // your Express backend (local)
+        target: 'http://localhost:3000',
         changeOrigin: true,
       },
     },
