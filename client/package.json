@@ -7,11 +7,11 @@
     "node": "22.x"
   },
   "scripts": {
-  "dev": "vite",
-  "build": "npm rebuild lightningcss --force && vite build",
-  "lint": "eslint .",
-  "preview": "vite preview"
-},
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "axios": "^1.12.2",
     "moment": "^2.30.1",

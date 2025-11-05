@@ -12,12 +12,13 @@ export default defineConfig({
     transformer: 'postcss', // ✅ Disable LightningCSS (fix for Vercel)
   },
   build: {
-    outDir: 'dist', // ✅ make sure build output is clear
+    outDir: 'dist', // ✅ ensure build folder is clear and consistent
+    emptyOutDir: true, // ✅ clean dist folder before each build
   },
   server: {
-    proxy: {
+    proxy: process.env.VERCEL ? {} : { // ✅ disable proxy on Vercel
       '/api': {
-        target: 'http://localhost:3000', // your Express backend
+        target: 'http://localhost:3000', // your Express backend (local)
         changeOrigin: true,
       },
     },
